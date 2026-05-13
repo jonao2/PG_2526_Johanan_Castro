@@ -3,7 +3,7 @@ import time
 
 # Configuración de credenciales WiFi (Modificar según entorno)
 ssid = 'MI_WIFI'
-password = 'MI_PASSWORD'
+password = 'MI_PASSWORD.'
 
 def do_connect():
     sta_if = network.WLAN(network.STA_IF)
