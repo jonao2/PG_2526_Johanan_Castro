@@ -1,3 +1,5 @@
+import machine
+machine.mem32[0x3FF480B4] = 0
 import network
 import time
 
