@@ -1,30 +1,31 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Control de Grúa Torre</title>
     <style>
         /* Diseño minimalista y responsivo inspirado en un control remoto real */
-        body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background-color: #0f172a; 
-            color: #e2e8f0; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            min-height: 100vh; 
-            margin: 0; 
-            user-select: none; /* Evitar selección accidental en móviles */
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            user-select: none;
+            /* Evitar selección accidental en móviles */
             -webkit-user-select: none;
         }
-        
-        h1 { 
-            margin-bottom: 30px; 
-            color: #38bdf8; 
-            font-weight: 600;
-            text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+
+        h1 {
+            margin-bottom: 30px;
+            color: #38bdf8;
+            font-weight: 600 text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
         }
 
         .panel {
@@ -38,44 +39,45 @@
         }
 
         /* Pad Direccional (Carro y Giro) */
-        .d-pad { 
-            display: grid; 
-            grid-template-columns: repeat(3, 80px); 
-            grid-template-rows: repeat(3, 80px); 
-            gap: 15px; 
-            margin-bottom: 40px; 
+        .d-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            grid-template-rows: repeat(3, 80px);
+            gap: 15px;
+            margin-bottom: 40px;
         }
 
-        .btn { 
-            background: #334155; 
-            border: 2px solid #475569; 
-            border-radius: 50%; 
-            color: white; 
-            font-size: 28px; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3); 
-            transition: all 0.1s ease; 
+        .btn {
+            background: #334155;
+            border: 2px solid #475569;
+            border-radius: 50%;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: all 0.1s ease;
             outline: none;
             -webkit-tap-highlight-color: transparent;
         }
 
         /* Efecto al presionar (Micro-animación) */
-        .btn:active, .btn.active { 
-            background: #38bdf8; 
-            border-color: #38bdf8; 
-            color: #0f172a; 
-            transform: scale(0.92); 
+        .btn:active,
+        .btn.active {
+            background: #38bdf8;
+            border-color: #38bdf8;
+            color: #0f172a;
+            transform: scale(0.92);
             box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
         }
 
-        .btn-empty { 
-            background: transparent; 
-            border: none; 
-            box-shadow: none; 
-            pointer-events: none; 
+        .btn-empty {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            pointer-events: none;
         }
 
         /* Botón Stop de Emergencia */
@@ -83,7 +85,9 @@
             background: #7f1d1d;
             border-color: #991b1b;
         }
-        .btn-stop:active, .btn-stop.active {
+
+        .btn-stop:active,
+        .btn-stop.active {
             background: #ef4444;
             border-color: #ef4444;
             color: white;
@@ -91,29 +95,30 @@
         }
 
         /* Controles de Elevación */
-        .elevacion-controls { 
-            display: flex; 
-            gap: 20px; 
+        .elevacion-controls {
+            display: flex;
+            gap: 20px;
             width: 100%;
             justify-content: space-between;
         }
 
-        .btn-elev { 
-            background: #334155; 
-            border-radius: 12px; 
-            width: 120px; 
-            height: 65px; 
-            font-weight: 700; 
+        .btn-elev {
+            background: #334155;
+            border-radius: 12px;
+            width: 120px;
+            height: 65px;
+            font-weight: 700;
             font-size: 16px;
             letter-spacing: 1px;
-            border: 2px solid #475569; 
+            border: 2px solid #475569;
             text-transform: uppercase;
         }
 
-        .btn-elev:active, .btn-elev.active { 
-            background: #f59e0b; 
-            border-color: #f59e0b; 
-            color: #0f172a; 
+        .btn-elev:active,
+        .btn-elev.active {
+            background: #f59e0b;
+            border-color: #f59e0b;
+            color: #0f172a;
             box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
         }
 
@@ -127,22 +132,23 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="panel">
         <h1>Grúa Torre</h1>
-        
+
         <div class="label-text">Carro / Giro</div>
         <!-- Pad Direccional -->
         <div class="d-pad">
             <div class="btn-empty"></div>
             <button class="btn" data-cmd="F" aria-label="Adelante">⬆️</button>
             <div class="btn-empty"></div>
-            
+
             <button class="btn" data-cmd="L" aria-label="Izquierda">↩️</button>
             <button class="btn btn-stop" data-cmd="S" aria-label="Parar">⏹️</button>
             <button class="btn" data-cmd="R" aria-label="Derecha">↪️</button>
-            
+
             <div class="btn-empty"></div>
             <button class="btn" data-cmd="B" aria-label="Atras">⬇️</button>
             <div class="btn-empty"></div>
@@ -167,10 +173,10 @@
         }
 
         const buttons = document.querySelectorAll('button');
-        
+
         buttons.forEach(btn => {
             const cmd = btn.getAttribute('data-cmd');
-            
+
             // Detección de eventos táctiles vs mouse para asegurar compatibilidad
             const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
             const startEvent = isTouch ? 'touchstart' : 'mousedown';
@@ -181,21 +187,21 @@
             btn.addEventListener(startEvent, (e) => {
                 e.preventDefault(); // Previene doble trigger en móviles
                 btn.classList.add('active'); // Feedback visual manual
-                
+
                 if (currentInterval) clearInterval(currentInterval);
-                
+
                 sendCommand(cmd); // Enviar inmediatamente
-                
+
                 // Repetir el comando cada 250ms mientras se mantenga presionado
                 // Esto mantiene vivo el "Timeout de Seguridad" en el Arduino
-                currentInterval = setInterval(() => sendCommand(cmd), 250); 
+                currentInterval = setInterval(() => sendCommand(cmd), 250);
             });
 
             // Función para detener (Envía 'S')
             const stopAction = (e) => {
                 e.preventDefault();
                 btn.classList.remove('active');
-                
+
                 if (currentInterval) {
                     clearInterval(currentInterval);
                     currentInterval = null;
@@ -209,4 +215,5 @@
         });
     </script>
 </body>
+
 </html>

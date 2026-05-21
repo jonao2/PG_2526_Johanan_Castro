@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 import sys
 import uselect
+=======
+import machine
+machine.mem32[0x3FF480B4] = 0
+import network
+>>>>>>> d565473babc81891266007758a1bde2c226ffc54
 import time
 import network
 import uasyncio as asyncio
