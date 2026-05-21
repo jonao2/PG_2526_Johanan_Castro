@@ -130,6 +130,39 @@
             text-transform: uppercase;
             letter-spacing: 2px;
         }
+
+        .telemetry-panel {
+            margin-top: 30px;
+            width: 100%;
+            background: #111827;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 18px 22px;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+        }
+
+        .telemetry-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #7dd3fc;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .telemetry-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            color: #cbd5e1;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .telemetry-row span {
+            color: #f8fafc;
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -159,6 +192,16 @@
         <div class="elevacion-controls">
             <button class="btn btn-elev" data-cmd="U">▲ Subir</button>
             <button class="btn btn-elev" data-cmd="D">▼ Bajar</button>
+        </div>
+
+        <div class="telemetry-panel">
+            <div class="telemetry-title">Telemetría del ESP32</div>
+            <div class="telemetry-row">IP: <span id="telemetry-ip">Cargando...</span></div>
+            <div class="telemetry-row">SSID: <span id="telemetry-ssid">Cargando...</span></div>
+            <div class="telemetry-row">RSSI: <span id="telemetry-rssi">Cargando...</span></div>
+            <div class="telemetry-row">Uptime: <span id="telemetry-uptime">Cargando...</span></div>
+            <div class="telemetry-row">Último comando: <span id="telemetry-last">Cargando...</span></div>
+            <div class="telemetry-row">Comandos: <span id="telemetry-count">0</span></div>
         </div>
     </div>
 
@@ -213,6 +256,29 @@
             btn.addEventListener(endEvent, stopAction);
             btn.addEventListener(leaveEvent, stopAction);
         });
+
+        function updateTelemetry(data) {
+            document.getElementById('telemetry-ip').textContent = data.ip || 'desconocido';
+            document.getElementById('telemetry-ssid').textContent = data.ssid || 'desconocido';
+            document.getElementById('telemetry-rssi').textContent = data.rssi !== null ? data.rssi + ' dBm' : 'N/A';
+            document.getElementById('telemetry-uptime').textContent = data.uptime || '00:00:00';
+            document.getElementById('telemetry-last').textContent = data.last_command || 'ninguno';
+            document.getElementById('telemetry-count').textContent = data.command_count || 0;
+        }
+
+        async function fetchTelemetry() {
+            try {
+                const response = await fetch('/telemetry');
+                if (!response.ok) return;
+                const data = await response.json();
+                updateTelemetry(data);
+            } catch (err) {
+                console.error('Error al obtener telemetría:', err);
+            }
+        }
+
+        fetchTelemetry();
+        setInterval(fetchTelemetry, 2000);
     </script>
 </body>
 
