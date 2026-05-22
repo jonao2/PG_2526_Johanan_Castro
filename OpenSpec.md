@@ -90,35 +90,8 @@ int finalElev = constrain(joyElev + (webElev * 255), -255, 255);
 
 ---
 
-## 5. Requisitos de software añadidos
+## 5. Requisitos formales del proyecto
 
-### 5.1 Flujo de arranque del ESP32
-1. `boot.py` se ejecuta primero en el ESP32.
-2. Muestra un menú en la terminal con dos opciones:
-   - `1`: iniciar normalmente y continuar con el sistema.
-   - `2`: detener en modo programación y liberar el REPL.
-3. Si no hay entrada del usuario en `5 segundos`, continúa automáticamente con la opción 1.
-4. Si se elige opción 1, `boot.py` conecta al WiFi y solo entonces importa y arranca `main.py`.
-5. Si no se conecta al WiFi, el arranque se interrumpe y no se ejecuta `main.py`.
+El detalle completo de los requisitos funcionales y no funcionales se encuentra en el archivo `REQUERIMIENTOS.md`.
 
-### 5.2 Separación de responsabilidades en software
-* `ESP32/boot.py`: manejo de arranque, menú de usuario, conexión WiFi y lanzamiento de `main.py`.
-* `ESP32/main.py`: servidor web `uasyncio`, entrega de `index.html`, recepción de comandos HTTP y envío de comandos UART al Arduino.
-
-### 5.3 Configuración del WiFi
-* El ESP32 requiere las constantes `SSID` y `PASSWORD` definidas en `ESP32/boot.py`.
-* Estas credenciales se deben personalizar antes de flashear el ESP32.
-
-### 5.4 Comportamiento del servidor web
-* `main.py` ya no realiza la conexión WiFi por sí mismo cuando se importa.
-* Permite que `boot.py` controle la fase de inicialización.
-* El servidor solo se inicia si `boot.py` completa la conexión WiFi.
-
-### 5.5 Buenas prácticas de ejecución
-* `main.py` debe contener una ejecución segura bajo `if __name__ == '__main__':`.
-* Esto evita efectos secundarios no deseados al importar el módulo desde `boot.py`.
-
-### 5.6 Componentes nuevos del software
-* `boot.py` usa `uselect`, `sys`, `time`, `network` y `uasyncio`.
-* `main.py` usa `uasyncio`, `UART` y `Pin`.
-* El servidor HTTP asíncrono responde a `/` e `/cmd?action=...`.
+Para ver los requerimientos del sistema, la inicialización del ESP32, la comunicación UART y las responsabilidades de cada módulo, abre `REQUERIMIENTOS.md`.
