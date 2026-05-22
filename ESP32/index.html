@@ -163,10 +163,139 @@
             color: #f8fafc;
             font-weight: 600;
         }
+
+        /* ===== ANIMACIÓN DE BIENVENIDA ===== */
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeOutUp {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+        }
+
+        @keyframes fadeInPanel {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeOutUp 2s ease-out 2.5s forwards;
+        }
+
+        .welcome-content {
+            text-align: center;
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        .welcome-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+            animation: fadeInScale 0.8s ease-out 0.2s backwards;
+        }
+
+        .welcome-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #38bdf8;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+            animation: fadeInScale 0.8s ease-out 0.4s backwards;
+            letter-spacing: 2px;
+        }
+
+        .welcome-subtitle {
+            font-size: 18px;
+            color: #94a3b8;
+            margin-bottom: 40px;
+            animation: fadeInScale 0.8s ease-out 0.6s backwards;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .welcome-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            animation: fadeInScale 0.8s ease-out 0.8s backwards;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #38bdf8;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        .panel {
+            animation: fadeInPanel 1s ease-out 3s forwards;
+            opacity: 0;
+        }
     </style>
 </head>
 
 <body>
+
+    <!-- Pantalla de Bienvenida -->
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <div class="welcome-content">
+            <div class="welcome-icon">🏗️</div>
+            <div class="welcome-title">GRÚA TORRE</div>
+            <div class="welcome-subtitle">Sistema de Control Remoto</div>
+            <div class="welcome-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+    </div>
 
     <div class="panel">
         <h1>Grúa Torre</h1>
@@ -279,6 +408,14 @@
 
         fetchTelemetry();
         setInterval(fetchTelemetry, 2000);
+
+        // Remover overlay de bienvenida después de la animación
+        setTimeout(() => {
+            const welcomeOverlay = document.getElementById('welcomeOverlay');
+            if (welcomeOverlay) {
+                welcomeOverlay.style.display = 'none';
+            }
+        }, 4500); // 3.5s de animación + 1s de buffer
     </script>
 </body>
 
