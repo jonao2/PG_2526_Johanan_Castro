@@ -325,6 +325,7 @@
 
         <div class="telemetry-panel">
             <div class="telemetry-title">Telemetría del ESP32</div>
+            <div class="telemetry-row">Estado: <span id="telemetry-status">Conectando...</span></div>
             <div class="telemetry-row">IP: <span id="telemetry-ip">Cargando...</span></div>
             <div class="telemetry-row">SSID: <span id="telemetry-ssid">Cargando...</span></div>
             <div class="telemetry-row">RSSI: <span id="telemetry-rssi">Cargando...</span></div>
@@ -387,6 +388,8 @@
         });
 
         function updateTelemetry(data) {
+            document.getElementById('telemetry-status').textContent = data.connected ? 'Conectado' : 'Desconectado';
+            document.getElementById('telemetry-status').style.color = data.connected ? '#34d399' : '#f87171';
             document.getElementById('telemetry-ip').textContent = data.ip || 'desconocido';
             document.getElementById('telemetry-ssid').textContent = data.ssid || 'desconocido';
             document.getElementById('telemetry-rssi').textContent = data.rssi !== null ? data.rssi + ' dBm' : 'N/A';
@@ -395,14 +398,29 @@
             document.getElementById('telemetry-count').textContent = data.command_count || 0;
         }
 
+        function showTelemetryError() {
+            document.getElementById('telemetry-status').textContent = 'No disponible';
+            document.getElementById('telemetry-status').style.color = '#f87171';
+            document.getElementById('telemetry-ip').textContent = 'N/A';
+            document.getElementById('telemetry-ssid').textContent = 'N/A';
+            document.getElementById('telemetry-rssi').textContent = 'N/A';
+            document.getElementById('telemetry-uptime').textContent = 'N/A';
+            document.getElementById('telemetry-last').textContent = 'N/A';
+            document.getElementById('telemetry-count').textContent = '0';
+        }
+
         async function fetchTelemetry() {
             try {
                 const response = await fetch('/telemetry');
-                if (!response.ok) return;
+                if (!response.ok) {
+                    showTelemetryError();
+                    return;
+                }
                 const data = await response.json();
                 updateTelemetry(data);
             } catch (err) {
                 console.error('Error al obtener telemetría:', err);
+                showTelemetryError();
             }
         }
 
